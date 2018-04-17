@@ -18,6 +18,8 @@ EpiDatabase::employ('mysql', 'ambpc', 'localhost', 'root', 'root');
 getRoute()->get('/', 'showEndpoints');
 getApi()->get('/processor.json', 'apiProcessor', EpiApi::external);
 getApi()->get('/mobo.json', 'apiMobo', EpiApi::external);
+getApi()->get('/ram.json', 'apiRam', EpiApi::external);
+getApi()->get('/hdd.json', 'apiHdd', EpiApi::external);
 getRoute()->run();
 
 /*
@@ -39,6 +41,20 @@ function apiProcessor() {
 function apiMobo() {
   header('Content-Type: application/json');
   $q = "SELECT mobo.* FROM `mobo` INNER JOIN processor_mobo ON (mobo.id=processor_mobo.mobo_id) WHERE processor_mobo.processor_id =1;";
+  $pcs = getDatabase()->all($q);
+  return $pcs;
+}
+
+function apiRam() {
+  header('Content-Type: application/json');
+  $q = "SELECT ram.* FROM `ram` INNER JOIN mobo_ram ON (ram.id=mobo_ram.ram_id) WHERE mobo_ram.mobo_id =1;";
+  $pcs = getDatabase()->all($q);
+  return $pcs;
+}
+
+function apiHdd() {
+  header('Content-Type: application/json');
+  $q = "SELECT * FROM hdd WHERE 1";
   $pcs = getDatabase()->all($q);
   return $pcs;
 }
